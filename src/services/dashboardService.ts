@@ -17,13 +17,4 @@ export const surveyService = {
     }
   },
   
-  getSurveyById: async (id: string) => {
-    try {
-      const response = await axiosInstance.get(`/admin/surveys/${id}`);
-      return response.data.survey; // Return the survey directly
-    } catch (error) {
-      console.error(`Error fetching survey ${id}:`, error);
-      throw error;
-    }
-  }
 };

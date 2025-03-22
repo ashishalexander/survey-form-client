@@ -73,7 +73,7 @@ client-side/
 ### Setup
 1. Clone the repository
    ```bash
-   git clone https://github.com/yourusername/survey-form-client.git
+   git clone https://github.com/ashishalexander/survey-form-client
    cd survey-form-client
    ```
 
