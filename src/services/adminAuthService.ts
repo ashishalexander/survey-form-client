@@ -8,4 +8,18 @@ export const adminAuthService = {
     });
     return response.data;
   },
+  checkAuth: async () => {
+    try {
+      const response = await axiosInstance.get("/admin/check-auth", {
+      });
+      return response.data.success;
+    } catch (error) {
+      console.error("Auth check failed:", error);
+      return false;
+    }
+  },
+  logout: async () => {
+    const response = await axiosInstance.post("/admin/logout");
+    return response.data;
+  },
 };

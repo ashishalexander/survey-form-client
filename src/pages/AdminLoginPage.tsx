@@ -2,7 +2,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,36 @@ import { adminAuthService } from "@/services/adminAuthService";
 const AdminLoginPage = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const checkAuthentication = async () => {
+      try {
+        const isAuthenticated = await adminAuthService.checkAuth();
+        // Only navigate if the component is still mounted
+        if (isMounted && isAuthenticated) {
+          navigate("/admin/dashboard");
+        }
+      } catch (error) {
+        // Authentication failed, stay on login page
+        console.error("Auth check error:", error);
+      } finally {
+        // Only update state if component is still mounted
+        if (isMounted) {
+          setCheckingAuth(false);
+        }
+      }
+    };
+
+    checkAuthentication();
+
+    // Cleanup function to prevent state updates after unmounting
+    return () => {
+      isMounted = false;
+    };
+  }, [navigate]);
 
   const form = useForm<LoginSchemaType>({
     resolver: zodResolver(loginSchema),
@@ -38,6 +68,14 @@ const AdminLoginPage = () => {
       setIsLoading(false);
     }
   };
+
+  if (checkingAuth) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 dark:border-gray-100"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900 p-4">

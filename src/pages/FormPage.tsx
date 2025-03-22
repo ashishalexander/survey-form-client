@@ -1,4 +1,3 @@
-// FormPage.tsx - Redesigned with horizontal layout and black/white shadcn/ui style
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { formSchema, FormSchemaType } from "../schemas/formSchema";
@@ -10,8 +9,11 @@ import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
+ 
 const FormPage = () => {
+  const navigate = useNavigate();
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -34,6 +36,7 @@ const FormPage = () => {
       await formService.submitSurveyForm(data);
       toast.success("Form submitted successfully!");
       form.reset();
+      navigate("/success");
     } catch (error) {
       console.error("Submission error:", error);
       toast.error("There was a problem submitting your form. Please try again.");
