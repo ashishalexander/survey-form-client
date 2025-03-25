@@ -5,7 +5,7 @@ export const formSchema = z.object({
   gender: z.enum(["male", "female"], { 
     required_error: "Please select your gender" 
   }),
-  nationality: z.string().min(1, "Please enter your nationality"),
+  nationality: z.string().trim().min(1, "Please enter your nationality"),
   email: z.string().trim().email("Please enter a valid email address"),
   phone: z.string().regex(
     /^(\+?\d{1,4}[-.\s]?)?(\(?\d{2,4}\)?[-.\s]?)?[\d\-.\s]{7,}$/,
