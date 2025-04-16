@@ -10,9 +10,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
  
 const FormPage = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
@@ -32,6 +35,7 @@ const FormPage = () => {
   });
 
   const onSubmit = async (data: FormSchemaType) => {
+    setIsSubmitting(true);
     try {
       await formService.submitSurveyForm(data);
       toast.success("Form submitted successfully!");
@@ -40,6 +44,7 @@ const FormPage = () => {
     } catch (error) {
       console.error("Submission error:", error);
       toast.error("There was a problem submitting your form. Please try again.");
+      setIsSubmitting(false)
     }
   };
 
@@ -180,8 +185,16 @@ const FormPage = () => {
                     <Button 
                       type="submit" 
                       className="bg-black hover:bg-zinc-800 text-white font-medium py-2 px-6 rounded-md transition-all duration-200"
+                      disabled={isSubmitting}
                     >
-                      Submit Survey
+                      {isSubmitting ? (
+                        <div className="flex items-center">
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Submitting...
+                        </div>
+                      ) : (
+                        "Submit Survey"
+                      )}
                     </Button>
                   </div>
                 </form>
